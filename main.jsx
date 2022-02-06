@@ -1,6 +1,6 @@
-import { listenAndServe } from "https://deno.land/std@0.99.0/http/mod.ts";
-import React from "https://jspm.dev/react@17.0.2";
-import ReactDOMServer from "https://jspm.dev/react-dom@17.0.2/server";
+import { listenAndServe } from "./deps.ts";
+import { React } from "./deps.ts";
+import { ReactDOMServer } from "./deps.ts";
 
 function App() {
     return <div>Hello SSR</div>;
