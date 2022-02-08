@@ -1,7 +1,15 @@
 import { React } from "../deps.ts";
+import App from "../components/App.jsx";
 
 export default function() {
-    return <div>
-        Hello! I'm Deno SSR ReactJS sample
-    </div>
+    return (
+        <html>
+            <head></head>
+            <body>
+                <div id="app">
+                    <App />
+                </div>
+            </body>
+        </html>
+    )
 }
