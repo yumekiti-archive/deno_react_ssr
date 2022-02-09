@@ -10,7 +10,8 @@ down:
 
 .PHONY: restart
 restart:
-	$(dc) restart
+	$(dc) down
+	$(dc) up -d --build
 
 .PHONY: rm
 rm:
