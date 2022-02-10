@@ -5,6 +5,7 @@ import { ReactDOMServer } from "./deps.ts";
 import Index from "./pages/index.jsx";
 
 listenAndServe({ port: 8080 }, (request) => {
+    // web
     if(request.method === "GET" && request.url === "/"){
         request.respond({
             status: 200,
@@ -17,12 +18,33 @@ listenAndServe({ port: 8080 }, (request) => {
         });
     }
 
-    if(request.method === "GET" && request.url === "/favicon.ico"){
+    else if(request.method === "GET" && request.url === "/favicon.ico"){
         request.respond({
             status: 302,
             headers: new Headers({
                 location: "https://deno.land/favicon.ico",
             }),
         });
+    }
+
+    // api
+    else if(request.method === "GET" && request.url === "/api"){
+        request.respond({
+            status: 200,
+            headers: new Headers({
+                "content-type": "application/json",
+            }),
+            body: JSON.stringify({
+                test: "hoge",
+            }),
+        })
+    }
+
+    // 404
+    else{
+        request.respond({
+            status: 404,
+            body: "404 | Page not Found"
+        })
     }
 });
