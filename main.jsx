@@ -2,7 +2,7 @@ import { listenAndServe } from "./deps.ts";
 import { React } from "./deps.ts";
 import { ReactDOMServer } from "./deps.ts";
 
-import Index from "./pages/index.jsx";
+import App from "./App.jsx";
 
 listenAndServe({ port: 8080 }, (request) => {
     // web
@@ -10,10 +10,17 @@ listenAndServe({ port: 8080 }, (request) => {
         request.respond({
             status: 200,
             headers: new Headers({
-                "Content-Type": "text/html",
+                "Content-Type": "text/html; charset=UTF-8",
             }),
             body: ReactDOMServer.renderToString(
-                <Index />
+                <html>
+                    <head></head>
+                    <body>
+                        <div id="app">
+                            <App />
+                        </div>
+                    </body>
+                </html>
             ),
         });
     }
