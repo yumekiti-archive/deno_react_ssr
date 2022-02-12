@@ -4,6 +4,11 @@ import { ReactDOMServer } from "./deps.ts";
 
 import App from "./App.jsx";
 
+const BUNDLE_JS_FILE_URL = "/bundle.js";
+
+// bundle.jsが無いとエラーになる
+const js = await Deno.readFile(`.${BUNDLE_JS_FILE_URL}`);
+
 listenAndServe({ port: 8080 }, (request) => {
     // web
     if(request.method === "GET" && request.url === "/"){
@@ -19,6 +24,7 @@ listenAndServe({ port: 8080 }, (request) => {
                         <div id="app">
                             <App />
                         </div>
+                        <script type="module" src={BUNDLE_JS_FILE_URL}></script>
                     </body>
                 </html>
             ),
@@ -31,6 +37,16 @@ listenAndServe({ port: 8080 }, (request) => {
             headers: new Headers({
                 location: "https://deno.land/favicon.ico",
             }),
+        });
+    }
+
+    else if(request.method === "GET" && request.url === "/bundle.js"){
+        request.respond({
+            status: 200,
+            headers: new Headers({
+                "Content-Type": "text/javascript",
+            }),
+            body: js,
         });
     }
 

@@ -1,5 +1,11 @@
 dc := docker compose
 
+.PHONY: init
+init:
+	@make up
+	$(dc) exec app deno bundle client.jsx bundle.js
+	@make up
+
 .PHONY: up
 up:
 	$(dc) up -d --build
@@ -10,8 +16,8 @@ down:
 
 .PHONY: restart
 restart:
-	$(dc) down
-	$(dc) up -d --build
+	@make down
+	@make up
 
 .PHONY: rm
 rm:
