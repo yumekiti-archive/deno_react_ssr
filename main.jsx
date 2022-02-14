@@ -4,10 +4,10 @@ import { ReactDOMServer } from "./deps.ts";
 
 import App from "./App.jsx";
 
-const BUNDLE_JS_FILE_URL = "/bundle.js";
+const BUNDLE_JS_FILE_URL = "./bundle.js";
 
 // bundle.jsが無いとエラーになる
-const js = await Deno.readFile(`.${BUNDLE_JS_FILE_URL}`);
+const js = await Deno.readFile(`./${BUNDLE_JS_FILE_URL}`);
 
 listenAndServe({ port: 8080 }, (request) => {
     // web
