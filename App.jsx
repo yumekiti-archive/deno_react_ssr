@@ -1,15 +1,21 @@
 import { React } from "./deps.ts";
 
 const App = () => {
-    const [count, setCount] = React.useState(0);
-  
+    const [posts, setPosts] = React.useState([])
+
+    React.useEffect(() => {
+        fetch('http://localhost:8080/api', {method: 'GET'})
+        .then(res => res.json())
+        .then(data => {
+            setPosts(data.test)
+        })
+    },[])
+
     return (
         <div>
-            <h1>Hello DenoLand!</h1>
-            <button onClick={() => setCount(count + 1)}>Click the &#129429;</button>
-            <p>You clicked the &#129429; {count} times</p>
+            {posts}
         </div>
-    );
+    )
 };
   
 export default App;
