@@ -4,7 +4,7 @@ dc := docker compose
 init:
 	@make up
 	$(dc) exec app deno bundle client.jsx bundle.js
-	@make up
+	@make restart
 
 .PHONY: up
 up:

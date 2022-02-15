@@ -6,8 +6,13 @@ import App from "./App.jsx";
 
 const BUNDLE_JS_FILE_URL = "./bundle.js";
 
-// bundle.jsが無いとエラーになる
-const js = await Deno.readFile(`./${BUNDLE_JS_FILE_URL}`);
+// bundle.jsの有無
+let js = "not Found";
+try{
+    js = await Deno.readFile(BUNDLE_JS_FILE_URL);
+}catch(e){
+    console.log(e);
+}
 
 listenAndServe({ port: 8080 }, (request) => {
     // web
