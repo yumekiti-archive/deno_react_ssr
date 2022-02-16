@@ -2,14 +2,14 @@ import { listenAndServe } from "./deps.ts";
 import { React } from "./deps.ts";
 import { ReactDOMServer } from "./deps.ts";
 
-import App from "./App.jsx";
+import App from "../react/components/app.jsx";
 
-const BUNDLE_JS_FILE_URL = "./bundle.js";
+const BUNDLE_JS_FILE_URL = "bundle.js";
 
 // bundle.jsの有無
 let js = "not Found";
 try{
-    js = await Deno.readFile(BUNDLE_JS_FILE_URL);
+    js = await Deno.readFile(`./react/${BUNDLE_JS_FILE_URL}`);
 }catch(e){
     console.log(e);
 }
