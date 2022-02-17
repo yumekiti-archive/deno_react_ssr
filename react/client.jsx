@@ -1,5 +1,5 @@
 import { React, ReactDOM } from "../deno/deps.ts";
-import App from "./components/app.jsx";
+import App from "./app.jsx";
 
 ReactDOM.hydrate(
     <App />,

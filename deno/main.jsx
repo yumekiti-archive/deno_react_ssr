@@ -2,7 +2,7 @@ import { listenAndServe } from "./deps.ts";
 import { React } from "./deps.ts";
 import { ReactDOMServer } from "./deps.ts";
 
-import App from "../react/components/app.jsx";
+import App from "../react/app.jsx";
 
 const BUNDLE_JS_FILE_URL = "bundle.js";
 

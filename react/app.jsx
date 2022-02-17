@@ -1,4 +1,4 @@
-import { React } from "../../deno/deps.ts";
+import { React } from "../deno/deps.ts";
 
 const App = () => {
     const [posts, setPosts] = React.useState([])
