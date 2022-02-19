@@ -1,5 +1,4 @@
 # Deno React SSR
 
-```
-make init
-```
+https://esm.sh
+https://www.npmjs.com/
