@@ -1,4 +1,5 @@
 import { React } from "../deno/deps.ts";
+import { twind } from "../deno/deps.ts";
 
 const App = () => {
     const [posts, setPosts] = React.useState([])
@@ -12,7 +13,7 @@ const App = () => {
     },[])
 
     return (
-        <div>
+        <div class={twind.tw`text-red-400`}>
             {posts}
         </div>
     )

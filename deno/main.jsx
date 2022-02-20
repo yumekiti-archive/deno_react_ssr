@@ -2,6 +2,8 @@ import { listenAndServe } from "./deps.ts";
 import { React } from "./deps.ts";
 import { ReactDOMServer } from "./deps.ts";
 
+import { twind, sheets } from "./deps.ts";
+
 import App from "../react/app.jsx";
 
 const BUNDLE_JS_FILE_URL = "bundle.js";
@@ -14,6 +16,11 @@ try{
     console.log(e);
 }
 
+const sheet = sheets.virtualSheet()
+twind.setup({ sheet })
+sheet.reset()
+const styleTag = sheets.getStyleTag(sheet)
+
 listenAndServe({ port: 8080 }, (request) => {
     // web
     if(request.method === "GET" && request.url === "/"){
@@ -24,7 +31,9 @@ listenAndServe({ port: 8080 }, (request) => {
             }),
             body: ReactDOMServer.renderToString(
                 <html>
-                    <head></head>
+                    <head>
+                        <style>{styleTag}</style>
+                    </head>
                     <body>
                         <div id="app">
                             <App />
