@@ -35,9 +35,7 @@ listenAndServe({ port: 8080 }, (request) => {
                         <style>{styleTag}</style>
                     </head>
                     <body>
-                        <div id="app">
-                            <App />
-                        </div>
+                        <div id="app"></div>
                         <script type="module" src={BUNDLE_JS_FILE_URL}></script>
                     </body>
                 </html>
