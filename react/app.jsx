@@ -57,23 +57,6 @@ const App = () => {
                     <div class={twind.tw`relative w-full p-6 overflow-y-auto h-[40rem]`}>
                         <ul class={twind.tw`space-y-2`}>
 
-                            <li class={twind.tw`flex justify-start`}>
-                                <div class={twind.tw`relative max-w-xl px-4 py-2 text-gray-700 rounded shadow`}>
-                                    <span class={twind.tw`block`}>Hi</span>
-                                </div>
-                            </li>
-                            
-                            <li class={twind.tw`flex justify-end`}>
-                                <div class={twind.tw`relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow`}>
-                                    <span class={twind.tw`block`}>how are you?</span>
-                                </div>
-                            </li>
-                            <li class={twind.tw`flex justify-start`}>
-                                <div class={twind.tw`relative max-w-xl px-4 py-2 text-gray-700 rounded shadow`}>
-                                    <span class={twind.tw`block`}>Lorem ipsum dolor sit, amet consectetur adipisicing elit. </span>
-                                </div>
-                            </li>
-
                             {
                                 chats.map((chat) => {
                                     return (
