@@ -5,9 +5,9 @@ import { v4 } from '../deno/deps.ts';
 const App = () => {
     const client = new WebSocket("ws://localhost:8080/ws");
 
+    const [chats, setChats] = React.useState([]);
     const [message, setMessage] = React.useState([]);
     const [id, setId] = React.useState(null);
-    const [chats, setChats] = React.useState([]);
 
     const uuid = () => {
         // Generate a v4 uuid.
@@ -41,11 +41,13 @@ const App = () => {
         setMessage('');
     }
 
-    client.onmessage = (event) => {
-        let data = JSON.parse(event.data);
-        console.log(event);
-        setChats([...chats, { id: data.id, body: data.body }]);
-    }
+    client.addEventListener("message", ({data}) => {
+        let json = JSON.parse(data);
+        console.log(json);
+
+        setChats((chats) => [...chats, {id: json.id, body: json.body} ]);
+        console.log(chats);
+    })
 
     return (
         <div class={twind.tw`flex`}>

@@ -1,13 +1,27 @@
 import { isWebSocketCloseEvent, isWebSocketPingEvent, WebSocket } from "./deps.ts";
 
+const clients = new Map<number, WebSocket>();
+
+const dispatch = (msg: string): void => {
+    for (const client of clients.values()) {
+        client.send(msg);
+    }
+}
+
 export default async function (sock: WebSocket) {
     console.log("socket connected!");
     try {
         for await (const ev of sock) {
             if (typeof ev === "string") {
+                let id = JSON.parse(ev).id
+                console.log(clients);
+                if(!clients.has(id)){
+                    clients.set(id, sock);
+                }
+
                 // text message.
                 console.log("ws:Text", ev);
-                await sock.send(ev);
+                dispatch(ev)
             } else if (ev instanceof Uint8Array) {
                 // binary message.
                 console.log("ws:Binary", ev);
