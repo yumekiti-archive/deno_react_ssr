@@ -1,25 +1,50 @@
 import { React } from '../deno/deps.ts';
 import { twind } from '../deno/deps.ts';
+import { v4 } from '../deno/deps.ts';
 
 const App = () => {
     const client = new WebSocket("ws://localhost:8080/ws");
 
-    const [data, setData] = React.useState([])
-    const [chats, setChats] = React.useState([])
+    const [message, setMessage] = React.useState([]);
+    const [id, setId] = React.useState(null);
+    const [chats, setChats] = React.useState([]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        client.send(data)
-        setData('')
+    const uuid = () => {
+        // Generate a v4 uuid.
+        const myUUID = v4.generate();
+
+        // Validate a v4 uuid.
+        const isValid = v4.validate(myUUID);
+
+        if(isValid){
+            setId(myUUID)
+        }else{
+            uuid()
+        }
     }
 
-    client.onmessage = (event) => {
-        let message = event.data;
-        setChats([...chats, { body: message }]);
+    if(id == null){
+        uuid()
     }
 
     const handleChange = (event) => {
-        setData(event.target.value);
+        setMessage(event.target.value);
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const data = {
+            id: id,
+            body: message,
+        };
+        client.send(JSON.stringify(data));
+        setMessage('');
+    }
+
+    client.onmessage = (event) => {
+        let data = JSON.parse(event.data);
+        console.log(event);
+        setChats([...chats, { id: data.id, body: data.body }]);
     }
 
     return (
@@ -38,11 +63,7 @@ const App = () => {
                                     <span class={twind.tw`block`}>Hi</span>
                                 </div>
                             </li>
-                            <li class={twind.tw`flex justify-end`}>
-                                <div class={twind.tw`relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow`}>
-                                    <span class={twind.tw`block`}>Hiiii</span>
-                                </div>
-                            </li>
+                            
                             <li class={twind.tw`flex justify-end`}>
                                 <div class={twind.tw`relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow`}>
                                     <span class={twind.tw`block`}>how are you?</span>
@@ -57,8 +78,9 @@ const App = () => {
                             {
                                 chats.map((chat) => {
                                     return (
-                                        <li class={twind.tw`flex justify-start`}>
-                                            <div class={twind.tw`relative max-w-xl px-4 py-2 text-gray-700 rounded shadow`}>
+                                        <li class={chat.id == id ? twind.tw`flex justify-start` : twind.tw`flex justify-end`}>
+                                            <div class={chat.id == id ? twind.tw`relative max-w-xl px-4 py-2 text-gray-700 rounded shadow` : twind.tw`relative max-w-xl px-4 py-2 text-gray-700 bg-gray-100 rounded shadow`}>
+                                                <span class={twind.tw`text-xs`}>id : { chat.id }</span>
                                                 <span class={twind.tw`block`}>{ chat.body }</span>
                                             </div>
                                         </li>
@@ -70,7 +92,7 @@ const App = () => {
                     </div>
 
                     <form class={twind.tw`flex items-center justify-between w-full p-3 border-t border-gray-300`} onSubmit={handleSubmit}>
-                        <input type="text" value={data} onChange={handleChange} placeholder="Message" class={twind.tw`block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700`} name="message" required />
+                        <input type="text" value={message} onChange={handleChange} placeholder="Message" class={twind.tw`block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700`} name="message" required />
                         <button type="submit">
                             <svg class={twind.tw`w-5 h-5 text-gray-500 origin-center transform rotate-90`} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />

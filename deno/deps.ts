@@ -6,6 +6,7 @@
 
 // Deno
 export { listenAndServe } from "https://deno.land/std@0.99.0/http/mod.ts";
+export { v4 } from "https://deno.land/std@0.99.0/uuid/mod.ts";
 import { acceptWebSocket, isWebSocketCloseEvent, isWebSocketPingEvent, WebSocket } from "https://deno.land/std@0.99.0/ws/mod.ts";
 export type { WebSocket };
 export { acceptWebSocket, isWebSocketCloseEvent, isWebSocketPingEvent };
