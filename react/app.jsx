@@ -43,10 +43,7 @@ const App = () => {
 
     client.addEventListener("message", ({data}) => {
         let json = JSON.parse(data);
-        console.log(json);
-
         setChats((chats) => [...chats, {id: json.id, body: json.body} ]);
-        console.log(chats);
     })
 
     return (
