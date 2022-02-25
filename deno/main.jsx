@@ -1,14 +1,16 @@
+// Deno
 import { listenAndServe } from "./deps.ts";
-import { React } from "./deps.ts";
-import { ReactDOMServer } from "./deps.ts";
+import { acceptWebSocket, isWebSocketCloseEvent, isWebSocketPingEvent, WebSocket } from "./deps.ts";
 
-import { twind, sheets } from "./deps.ts";
-
+// React
+import { React, ReactDOMServer } from "./deps.ts";
 import App from "../react/app.jsx";
 
-const BUNDLE_JS_FILE_URL = "bundle.js";
+// Twind
+import { twind, sheets } from "./deps.ts";
 
 // bundle.jsの有無
+const BUNDLE_JS_FILE_URL = "bundle.js";
 let js = "not Found";
 try{
     js = await Deno.readFile(`./react/${BUNDLE_JS_FILE_URL}`);
@@ -16,10 +18,42 @@ try{
     console.log(e);
 }
 
+// Twind
 const sheet = sheets.virtualSheet()
 twind.setup({ sheet })
 sheet.reset()
 const styleTag = sheets.getStyleTag(sheet)
+
+// ws
+async function handleWs(sock) {
+    console.log("socket connected!");
+    try {
+        for await (const ev of sock) {
+            if (typeof ev === "string") {
+                // text message.
+                console.log("ws:Text", ev);
+                await sock.send(ev);
+            } else if (ev instanceof Uint8Array) {
+                // binary message.
+                console.log("ws:Binary", ev);
+            } else if (isWebSocketPingEvent(ev)) {
+                const [, body] = ev;
+                // ping.
+                console.log("ws:Ping", body);
+            } else if (isWebSocketCloseEvent(ev)) {
+                // close.
+                const { code, reason } = ev;
+                console.log("ws:Close", code, reason);
+            }
+        }
+    } catch (err) {
+        console.error(`failed to receive frame: ${err}`);
+
+        if (!sock.isClosed) {
+            await sock.close(1000).catch(console.error);
+        }
+    }
+}
 
 listenAndServe({ port: 8080 }, (request) => {
     // web
@@ -73,6 +107,17 @@ listenAndServe({ port: 8080 }, (request) => {
                 test: "hoge",
             }),
         })
+    }
+
+    // ws
+    else if(request.method === "GET" && request.url === "/ws"){
+        const { conn, r: bufReader, w: bufWriter, headers } = request;
+        acceptWebSocket({
+            conn,
+            bufReader,
+            bufWriter,
+            headers,
+        }).then(handleWs)
     }
 
     // 404

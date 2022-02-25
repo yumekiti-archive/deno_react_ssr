@@ -6,6 +6,9 @@
 
 // Deno
 export { listenAndServe } from "https://deno.land/std@0.99.0/http/mod.ts";
+import { acceptWebSocket, isWebSocketCloseEvent, isWebSocketPingEvent, WebSocket } from "https://deno.land/std@0.99.0/ws/mod.ts";
+export type { WebSocket };
+export { acceptWebSocket, isWebSocketCloseEvent, isWebSocketPingEvent };
 
 // React
 export { default as React } from "https://esm.sh/react@17.0.2";

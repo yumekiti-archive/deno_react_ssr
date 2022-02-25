@@ -2,6 +2,8 @@ import { React } from '../deno/deps.ts';
 import { twind } from '../deno/deps.ts';
 
 const App = () => {
+    const client = new WebSocket("ws://localhost:8080/ws");
+
     const [posts, setPosts] = React.useState([])
 
     React.useEffect(() => {
