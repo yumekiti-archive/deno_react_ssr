@@ -1,11 +1,8 @@
 import { React } from '../deno/deps.ts';
-import { twind } from '../deno/deps.ts';
 import { v4 } from '../deno/deps.ts';
 import ChatList from './components/ChatList.jsx';
 
 const App = () => {
-    const client = new WebSocket("ws://localhost:8080/ws");
-
     const [id, setId] = React.useState(null);
 
     const uuid = () => {
@@ -27,7 +24,7 @@ const App = () => {
     }
 
     return (
-        <ChatList id={id} client={client} />
+        <ChatList id={id} />
     )
 };
   
