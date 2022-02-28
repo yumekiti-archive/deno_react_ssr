@@ -1,7 +1,8 @@
 // Deno
 import { listenAndServe } from "./deps.ts";
 import { acceptWebSocket } from "./deps.ts";
-import handleWs from "./handleWs.ts"
+import handleWs from "./handleWs.ts";
+import Router from "./route.ts";
 
 // React
 import { React, ReactDOMServer } from "./deps.ts";
@@ -16,52 +17,34 @@ import Twind from "./twind.ts";
 const BUNDLE_JS_FILE_URL = "bundle.js";
 const bundle = await Bundle(BUNDLE_JS_FILE_URL);
 
-listenAndServe({ port: 8080 }, (request) => {
+listenAndServe({ port: 8080 }, async (request) => {
     // web
-    if(request.method === "GET" && request.url === "/"){
-        request.respond({
-            status: 200,
-            headers: new Headers({
-                "Content-Type": "text/html; charset=UTF-8",
-            }),
-            body: ReactDOMServer.renderToString(<Index style={Twind} src={BUNDLE_JS_FILE_URL}/>),
-        });
-    }
+    await Router(request, "GET", "/", 200,
+        {"Content-Type": "text/html; charset=UTF-8"},
+        ReactDOMServer.renderToString(
+            <Index style={Twind} src={BUNDLE_JS_FILE_URL}/>
+        )
+    );
 
-    else if(request.method === "GET" && request.url === "/favicon.ico"){
-        request.respond({
-            status: 302,
-            headers: new Headers({
-                location: "https://deno.land/favicon.ico",
-            }),
-        });
-    }
+    await Router(request, "GET", "/favicon.ico", 302,
+        {location: "https://deno.land/favicon.ico"},
+    );
 
-    else if(request.method === "GET" && request.url === "/bundle.js"){
-        request.respond({
-            status: 200,
-            headers: new Headers({
-                "Content-Type": "text/javascript",
-            }),
-            body: bundle,
-        });
-    }
+    await Router(request, "GET", "/bundle.js", 200,
+        {"Content-Type": "text/javascript"},
+        bundle
+    );
 
     // api
-    else if(request.method === "GET" && request.url === "/api"){
-        request.respond({
-            status: 200,
-            headers: new Headers({
-                "content-type": "application/json",
-            }),
-            body: JSON.stringify({
-                test: "hoge",
-            }),
-        })
-    }
+    await Router(request, "GET", "/api", 200,
+        {"content-type": "application/json"},
+        JSON.stringify({
+            test: "hoge",
+        }),
+    );
 
     // ws
-    else if(request.method === "GET" && request.url === "/ws"){
+    if(request.method === "GET" && request.url === "/ws"){
         const { conn, r: bufReader, w: bufWriter, headers } = request;
         acceptWebSocket({
             conn,
@@ -69,13 +52,5 @@ listenAndServe({ port: 8080 }, (request) => {
             bufWriter,
             headers,
         }).then(handleWs)
-    }
-
-    // 404
-    else{
-        request.respond({
-            status: 404,
-            body: "404 | Page not Found"
-        })
     }
 });
