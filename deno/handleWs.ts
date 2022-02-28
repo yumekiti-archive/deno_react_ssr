@@ -9,12 +9,10 @@ const dispatch = (msg: string): void => {
 }
 
 export default async function (sock: WebSocket) {
-    console.log("socket connected!");
     try {
         for await (const ev of sock) {
             if (typeof ev === "string") {
-                let id = JSON.parse(ev).id
-                console.log(clients);
+                let id = JSON.parse(ev).id;
                 if(!clients.has(id)){
                     clients.set(id, sock);
                 }
