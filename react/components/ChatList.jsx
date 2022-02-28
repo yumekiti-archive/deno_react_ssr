@@ -2,7 +2,7 @@ import ChatItem from "./ChatItem.jsx";
 import { twind } from '../../deno/deps.ts';
 
 export default ({id}) => {
-    const [chats, setChats] = React.useState([]);
+    const [chats, setChats] = React.useState([{id: Number, body: String}]);
 
     const handleChange = (event) => {
         setChats.body(event.target.value);
@@ -19,8 +19,8 @@ export default ({id}) => {
     }
 
     client.addEventListener("message", ({data}) => {
-        let json = JSON.parse(data);
-        setChats((chats) => [...chats, {id: json.id, body: json.body} ]);
+        const json = JSON.parse(data);
+        setChats((chats) => [...chats, {id: json.id, body: json.body}]);
     })
 
     return (
