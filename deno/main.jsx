@@ -7,18 +7,14 @@ import handleWs from "./handleWs.ts"
 import { React, ReactDOMServer } from "./deps.ts";
 import Index from "../public/index.jsx";
 import App from "../react/app.jsx";
+import Bundle from "./bundle.ts";
 
 // Twind
 import Twind from "./twind.ts";
 
 // bundle.jsの有無
 const BUNDLE_JS_FILE_URL = "bundle.js";
-let js = "not Found";
-try{
-    js = await Deno.readFile(`./react/${BUNDLE_JS_FILE_URL}`);
-}catch(e){
-    console.log(e);
-}
+const bundle = await Bundle(BUNDLE_JS_FILE_URL);
 
 listenAndServe({ port: 8080 }, (request) => {
     // web
@@ -47,7 +43,7 @@ listenAndServe({ port: 8080 }, (request) => {
             headers: new Headers({
                 "Content-Type": "text/javascript",
             }),
-            body: js,
+            body: bundle,
         });
     }
 
