@@ -21,14 +21,15 @@ export default ({id}) => {
             setChats((chats) => [...chats, {id: json.id, body: json.body}]);
         }
 
+        socketRef.current.onclose = function(event) {
+            console.log(event);
+        };
+
         socketRef.current.onerror = function(error) {
             console.log(`[error] ${error.message}`);
         };
 
-        return () => {
-            console.log('close');
-            socketRef.current.onclose();
-        };
+        return () => socketRef.current.close()
     }, []);
 
     const [chats, setChats] = React.useState([]);
