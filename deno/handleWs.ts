@@ -12,6 +12,9 @@ export default async function (sock: WebSocket) {
     try {
         for await (const ev of sock) {
             if (typeof ev === "string") {
+                console.log(clients);
+                console.log(JSON.parse(ev).id);
+
                 let id = JSON.parse(ev).id;
                 if(!clients.has(id)){
                     clients.set(id, sock);

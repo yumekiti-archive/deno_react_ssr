@@ -3,7 +3,33 @@ import { twind } from '../../deno/deps.ts';
 import ChatItem from "./ChatItem.jsx";
 
 export default ({id}) => {
-    const client = new WebSocket("ws://localhost:8080/ws");
+    const socketRef = React.useRef();
+
+    React.useEffect(() => {
+        socketRef.current = new WebSocket("ws://localhost:8080/ws");
+
+        socketRef.current.onopen = () => {
+            const data = {
+                id: id,
+                body: id + 'が参加した。',
+            };
+            socketRef.current.send(JSON.stringify(data));
+        };
+
+        socketRef.current.addEventListener("message", ({data}) => {
+            const json = JSON.parse(data);
+            setChats((chats) => [...chats, {id: json.id, body: json.body}]);
+        })
+
+        socketRef.current.onerror = function(error) {
+            console.log(`[error] ${error.message}`);
+        };
+
+        return () => {
+            console.log('close');
+            socketRef.current.onclose();
+        };
+    }, []);
 
     const [chats, setChats] = React.useState([]);
     const [message, setMessage] = React.useState('');
@@ -18,14 +44,9 @@ export default ({id}) => {
             id: id,
             body: message,
         };
-        client.send(JSON.stringify(data));
+        socketRef.current.send(JSON.stringify(data));
         setMessage('');
     }
-
-    client.addEventListener("message", ({data}) => {
-        const json = JSON.parse(data);
-        setChats((chats) => [...chats, {id: json.id, body: json.body}]);
-    })
 
     return (
         <div class={twind.tw`flex`}>
