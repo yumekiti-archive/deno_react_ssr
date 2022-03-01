@@ -32,6 +32,7 @@ export default async function (sock: WebSocket) {
                 console.log("ws:Ping", body);
             } else if (isWebSocketCloseEvent(ev)) {
                 // close.
+                clients.clear()
                 const { code, reason } = ev;
                 console.log("ws:Close", code, reason);
             }
