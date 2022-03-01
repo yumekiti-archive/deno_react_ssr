@@ -16,10 +16,10 @@ export default ({id}) => {
             socketRef.current.send(JSON.stringify(data));
         };
 
-        socketRef.current.addEventListener("message", ({data}) => {
+        socketRef.current.onmessage = ({data}) => {
             const json = JSON.parse(data);
             setChats((chats) => [...chats, {id: json.id, body: json.body}]);
-        })
+        }
 
         socketRef.current.onerror = function(error) {
             console.log(`[error] ${error.message}`);
