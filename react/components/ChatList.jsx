@@ -6,7 +6,7 @@ export default ({id}) => {
     const socketRef = React.useRef();
 
     React.useEffect(() => {
-        socketRef.current = new WebSocket("ws://" + window.document.location.host + "/ws");
+        socketRef.current = new WebSocket(`ws://${location.host}/ws`);
 
         socketRef.current.onopen = () => {
             const data = {
