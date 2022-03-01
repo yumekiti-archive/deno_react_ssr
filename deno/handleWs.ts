@@ -12,9 +12,6 @@ export default async function (sock: WebSocket) {
     try {
         for await (const ev of sock) {
             if (typeof ev === "string") {
-                console.log(clients);
-                console.log(JSON.parse(ev).id);
-
                 let id = JSON.parse(ev).id;
                 if(!clients.has(id)){
                     clients.set(id, sock);
@@ -32,7 +29,9 @@ export default async function (sock: WebSocket) {
                 console.log("ws:Ping", body);
             } else if (isWebSocketCloseEvent(ev)) {
                 // close.
-                clients.clear()
+                clients.forEach((value, key, map) => {
+                    if(value.isClosed) clients.delete(key)
+                });
                 const { code, reason } = ev;
                 console.log("ws:Close", code, reason);
             }
