@@ -19,12 +19,18 @@ const bundle = await Bundle(BUNDLE_JS_FILE_URL);
 listenAndServe({ port: 8080 }, async (request) => {
     // web
     if(request.method === "GET" && request.url === "/"){
+        const meta = {
+            title: 'チャット',
+            description: '説明',
+            type: 'website',
+            url: '/',
+        }
         request.respond({
             status: 200,
             headers: new Headers({
-                "Content-Type": "text/html; charset=UTF-8",
+                "Content-Type": "text/html",
             }),
-            body: ReactDOMServer.renderToString(<Index style={Twind} src={BUNDLE_JS_FILE_URL}/>),
+            body: ReactDOMServer.renderToString(<Index style={Twind} src={BUNDLE_JS_FILE_URL} meta={meta} />),
         });
     }
 
